@@ -1,2 +1,2 @@
-# eecs2031lab07
-rpn calculator
+# rpncalc
+eecs2031 lab
