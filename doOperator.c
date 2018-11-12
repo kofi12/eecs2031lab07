@@ -9,6 +9,18 @@ static int op_quit(struct tokenStack *stack);
 static int op_print(struct tokenStack *stack);
 static int op_dump(struct tokenStack *stack);
 static int op_add(struct tokenStack *stack);
+static int popInt(struct tokenStack *s);
+static void pushInt(struct tokenStack *s, int v);
+static int op_diff(struct tokenStack *s);
+static int op_product(struct tokenStack *s);
+static int op_quotient(struct tokenStack *s);
+static int op_gt(struct tokenStack *s);
+static int op_lt(struct tokenStack *s);
+static int op_ge(struct tokenStack *s);
+static int op_le(struct tokenStack *s);
+static int op_eq(struct tokenStack *s);
+static int op_if(struct tokenStack *s, int v);
+static int op_modquot(struct tokenStack *s);
 
 static struct operator_struct {
   char *name;
@@ -18,6 +30,16 @@ static struct operator_struct {
   {"print", op_print},
   {"dump", op_dump},
   {"+", op_add},
+  {"-", op_diff},
+  {"*", op_product},
+  {"/", op_quotient},
+  {"GT", op_gt},
+  {"LT", op_lt},
+  {"GE", op_ge},
+  {"LE", op_le},
+  {"EQ", op_eq},
+  {"IF", op_if},
+  {"MODQUOT", op_modquot},
   {(char *)NULL, (int(*)(struct tokenStack *)) NULL}
 };
 
@@ -25,12 +47,17 @@ static struct operator_struct {
 /* YOU WRITE THIS */
 static int popInt(struct tokenStack *s)
 {
-  return 0;
+	int temp = s->e[top]->symbol[0];
+	s->e[top--]->symbol[0] = '\0';
+  	return temp;
 }
 
 /* YOU WRITE THIS */
 static void pushInt(struct tokenStack *s, int v)
 {
+	if(v < '0' || v > '9')
+		printf("error");
+	s->e[top++]->symbol[0] = v;
 }
 
 int doOperator(struct tokenStack *stack, char *o) 
@@ -74,4 +101,95 @@ static int op_add(struct tokenStack *stack)
   v2 = popInt(stack);
   pushInt(stack, v1+v2);
   return(0);
+}
+
+static int op_diff(struct tokenStack *s)
+{
+	int n2 = popInt(s);
+	int n1 = popInt(s);
+	pushInt(s,(n1 - n2));
+	return(0);
+}
+
+static int op_product(struct tokenStack *s)
+{
+	int n2 = popInt(s);
+        int n1 = popInt(s);
+        pushInt(s,(n1 * n2));
+	return(0);
+}
+
+static int op_quotient(struct tokenStack *s)
+{
+	int n2 = popInt(s);
+        int n1 = popInt(s);
+        pushInt(s,(n1 / n2));
+	return(0);
+}
+
+static int op_gt(struct tokenStack *s)
+{
+	int n2 = popInt(s);
+        int n1 = popInt(s);
+        if(n1 > n2)
+		pushInt(1);
+	pushInt(0);
+	return(0);
+}
+
+static int op_lt(struct tokenStack *s)
+{
+	int n2 = popInt(s);
+        int n1 = popInt(s);
+        if(n1 < n2)
+                pushInt(1);
+        pushInt(0);
+	return(0);
+}
+
+static int op_ge(struct tokenStack *s)
+{
+	int n2 = popInt(s);
+        int n1 = popInt(s);
+        if(n1 >= n2)
+                pushInt(1);
+        pushInt(0);
+	return(0);
+}
+
+static int op_le(struct tokenStack *s)
+{
+        int n2 = popInt(s);
+        int n1 = popInt(s);
+        if(n1 <= n2)
+                pushInt(1);
+        pushInt(0);
+	return(0);
+}
+
+static int op_eq(struct tokenStack *s)
+{
+        int n2 = popInt(s);
+        int n1 = popInt(s);
+        if(n1 == n2)
+                pushInt(1);
+        pushInt(0);
+	return(0);
+}
+
+static int op_if(struct tokenStack *s, int v)
+{
+	int n2 = popInt(s);
+        int n1 = popInt(s);    
+	(v != 0) ? pushInt(n1) : pushInt(n2);
+	return(0); 
+}
+
+static int op_modquot(struct tokenStack *s)
+{
+        int n2 = popInt(s);
+        int n1 = popInt(s);
+	pushInt(n1 % n2);
+	pushInt(n1 / n2);
+	return(0);
 }
