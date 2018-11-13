@@ -47,8 +47,8 @@ static struct operator_struct {
 /* YOU WRITE THIS */
 static int popInt(struct tokenStack *s)
 {
-	int temp = s->e[top]->symbol[0];
-	s->e[top--]->symbol[0] = '\0';
+	int temp = s->e[s->top]->symbol[0];
+	s->e[s->top--]->symbol[0] = '\0';
   	return temp;
 }
 
@@ -57,7 +57,7 @@ static void pushInt(struct tokenStack *s, int v)
 {
 	if(v < '0' || v > '9')
 		printf("error");
-	s->e[top++]->symbol[0] = v;
+	s->e[s->top++]->symbol[0] = v;
 }
 
 int doOperator(struct tokenStack *stack, char *o) 
@@ -132,8 +132,8 @@ static int op_gt(struct tokenStack *s)
 	int n2 = popInt(s);
         int n1 = popInt(s);
         if(n1 > n2)
-		pushInt(1);
-	pushInt(0);
+		pushInt(s,1);
+	pushInt(s,0);
 	return(0);
 }
 
@@ -142,8 +142,8 @@ static int op_lt(struct tokenStack *s)
 	int n2 = popInt(s);
         int n1 = popInt(s);
         if(n1 < n2)
-                pushInt(1);
-        pushInt(0);
+                pushInt(s,1);
+        pushInt(s,0);
 	return(0);
 }
 
@@ -152,8 +152,8 @@ static int op_ge(struct tokenStack *s)
 	int n2 = popInt(s);
         int n1 = popInt(s);
         if(n1 >= n2)
-                pushInt(1);
-        pushInt(0);
+                pushInt(s,1);
+        pushInt(s,0);
 	return(0);
 }
 
@@ -162,8 +162,8 @@ static int op_le(struct tokenStack *s)
         int n2 = popInt(s);
         int n1 = popInt(s);
         if(n1 <= n2)
-                pushInt(1);
-        pushInt(0);
+                pushInt(s,1);
+        pushInt(s,0);
 	return(0);
 }
 
@@ -172,8 +172,8 @@ static int op_eq(struct tokenStack *s)
         int n2 = popInt(s);
         int n1 = popInt(s);
         if(n1 == n2)
-                pushInt(1);
-        pushInt(0);
+                pushInt(s,1);
+        pushInt(s,0);
 	return(0);
 }
 
@@ -181,7 +181,7 @@ static int op_if(struct tokenStack *s, int v)
 {
 	int n2 = popInt(s);
         int n1 = popInt(s);    
-	(v != 0) ? pushInt(n1) : pushInt(n2);
+	(v != 0) ? pushInt(s,n1) : pushInt(s,n2);
 	return(0); 
 }
 
@@ -189,7 +189,7 @@ static int op_modquot(struct tokenStack *s)
 {
         int n2 = popInt(s);
         int n1 = popInt(s);
-	pushInt(n1 % n2);
-	pushInt(n1 / n2);
+	pushInt(s,n1 % n2);
+	pushInt(s,n1 / n2);
 	return(0);
 }
