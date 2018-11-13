@@ -47,17 +47,26 @@ static struct operator_struct {
 /* YOU WRITE THIS */
 static int popInt(struct tokenStack *s)
 {
-	int temp = s->e[s->top]->symbol[0];
-	s->e[(s->top)--]->symbol[0] = '\0';
-  	return temp;
+	int ret;
+	struct lexToken *token = allocToken();
+	token = popTokenStack(s);
+	ret = token->symbol[0];
+	freeToken(token);	
+ 
+  	return ret;
 }
 
 /* YOU WRITE THIS */
 static void pushInt(struct tokenStack *s, int v)
 {
+	struct lexToken *token;
 	if(v < '0' || v > '9')
 		printf("error");
-	s->e[(s->top)++]->symbol[0] = v;
+
+	token = allocToken();
+	token->symbol[0] = v;
+	token->kind = LEX_TOKEN_NUMBER;
+	pushTokenStack(s,token);
 }
 
 int doOperator(struct tokenStack *stack, char *o) 
