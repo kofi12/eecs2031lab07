@@ -48,7 +48,7 @@ static struct operator_struct {
 static int popInt(struct tokenStack *s)
 {
 	int temp = s->e[s->top]->symbol[0];
-	s->e[s->top--]->symbol[0] = '\0';
+	s->e[(s->top)--]->symbol[0] = '\0';
   	return temp;
 }
 
@@ -57,7 +57,7 @@ static void pushInt(struct tokenStack *s, int v)
 {
 	if(v < '0' || v > '9')
 		printf("error");
-	s->e[s->top++]->symbol[0] = v;
+	s->e[(s->top)++]->symbol[0] = v;
 }
 
 int doOperator(struct tokenStack *stack, char *o) 
