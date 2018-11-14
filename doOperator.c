@@ -48,8 +48,7 @@ static struct operator_struct {
 static int popInt(struct tokenStack *s)
 {
 	int ret;
-	struct lexToken *token = allocToken();
-	token = popTokenStack(s);
+	struct lexToken *token = popTokenStack(s);
 	ret = token->symbol[0];
 	freeToken(token);	
  
@@ -60,10 +59,7 @@ static int popInt(struct tokenStack *s)
 static void pushInt(struct tokenStack *s, int v)
 {
 	struct lexToken *token;
-	if(v < '0' || v > '9')
-		printf("error");
-
-	token = allocToken();
+	token = nextToken();
 	token->symbol[0] = v;
 	token->kind = LEX_TOKEN_NUMBER;
 	pushTokenStack(s,token);
